@@ -45,4 +45,8 @@ public class ProductService {
         productRepo.deleteById(productId);
     }
 
+    public List<Product> searchProductsByQuery(String searchedQuery) {
+        return productRepo.searchProductsByQuery(searchedQuery);
+    }
+
 }
