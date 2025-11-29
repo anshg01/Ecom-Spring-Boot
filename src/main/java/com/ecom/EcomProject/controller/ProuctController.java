@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,6 +69,36 @@ public class ProuctController {
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(imageType))
                 .body(imageData);
+    }
+
+    // Update a Product
+    @PutMapping("/products/{productId}")
+    public ResponseEntity<String> updateProductById(@PathVariable int productId, Product product,
+            MultipartFile imageFile) {
+        try {
+            Product updatedProduct = productService.updateProductById(productId, product, imageFile);
+
+            if (updatedProduct == null)
+                throw new Exception("Product not found");
+            return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Delete a Product by Product ID
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<String> deleteProductById(@PathVariable int productId) {
+        Product product = productService.getProductById(productId);
+        if (product == null) {
+            return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+        }
+        try {
+            productService.deleteProductById(productId);
+            return new ResponseEntity<>("Product deleted successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
