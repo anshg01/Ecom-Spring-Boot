@@ -35,9 +35,5 @@ public class Product {
     private int quantity;
     private double rating;
 
-    private String imageName;
-    private String imageType;
-    @Lob
-    private byte[] imageData;
-
+    private String imageUrl;
 }

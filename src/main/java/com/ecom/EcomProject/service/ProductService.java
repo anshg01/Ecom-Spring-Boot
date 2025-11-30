@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ecom.EcomProject.model.Product;
 import com.ecom.EcomProject.repo.ProductRepository;
@@ -25,18 +23,14 @@ public class ProductService {
         return productRepo.findById(productId).orElse(null);
     }
 
-    public Product addProduct(Product product, MultipartFile imageFile) throws IOException {
-        product.setImageName(imageFile.getOriginalFilename());
-        product.setImageType(imageFile.getContentType());
-        product.setImageData(imageFile.getBytes());
+    public Product addProduct(Product product, String imageUrl) throws IOException {
+        product.setImageUrl(imageUrl);
 
         return productRepo.save(product);
     }
 
-    public Product updateProductById(int productId, Product product, MultipartFile imageFile) throws IOException {
-        product.setImageData(imageFile.getBytes());
-        product.setImageName(imageFile.getOriginalFilename());
-        product.setImageType(imageFile.getContentType());
+    public Product updateProductById(int productId, Product product, String imageFileUrl) throws IOException {
+        product.setImageUrl(imageFileUrl);
 
         return productRepo.save(product);
     }

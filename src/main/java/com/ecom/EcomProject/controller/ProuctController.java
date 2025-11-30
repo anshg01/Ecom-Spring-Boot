@@ -49,9 +49,9 @@ public class ProuctController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<?> addProduct(@RequestPart Product product, @RequestPart MultipartFile imageFile) {
+    public ResponseEntity<?> addProduct(@RequestPart Product product, @RequestPart String imageUrl) {
         try {
-            Product newProduct = productService.addProduct(product, imageFile);
+            Product newProduct = productService.addProduct(product, imageUrl);
             return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -60,24 +60,22 @@ public class ProuctController {
     }
 
     @GetMapping("/products/{productId}/image")
-    public ResponseEntity<byte[]> getProductImageById(@PathVariable int productId) {
+    public ResponseEntity<String> getProductImageById(@PathVariable int productId) {
         Product product = productService.getProductById(productId);
-        if (product == null || product.getImageData() == null) {
+        if (product == null || product.getImageUrl() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        byte[] imageData = product.getImageData();
-        String imageType = product.getImageType();
+        String imageUrl = product.getImageUrl();
         return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(imageType))
-                .body(imageData);
+                .body(imageUrl);
     }
 
     // Update a Product
     @PutMapping("/products/{productId}")
     public ResponseEntity<String> updateProductById(@PathVariable int productId, Product product,
-            MultipartFile imageFile) {
+            String imageUrl) {
         try {
-            Product updatedProduct = productService.updateProductById(productId, product, imageFile);
+            Product updatedProduct = productService.updateProductById(productId, product, imageUrl);
 
             if (updatedProduct == null)
                 throw new Exception("Product not found");
